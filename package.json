@@ -13,6 +13,7 @@
     "child_process": "^1.0.2",
     "fs": "0.0.1-security",
     "iconv-lite": "^0.4.19",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "request": "^2.83.0"
   }
 }
