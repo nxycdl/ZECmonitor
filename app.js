@@ -5,6 +5,7 @@ var Tail = require('always-tail');
 var fs = require('fs');
 const spawn = require('child_process').spawn;
 var config = require('./config');
+var moment = require('moment');
 console.log(config.port);
 global.G = {};
 
@@ -24,15 +25,28 @@ if (!fs.existsSync(filename)) fs.writeFileSync(filename, "");
 var tail = new Tail(filename, '\n');
 
 tail.on('line', function (data) {
+    var date = moment().format('YYYYMMDDHHmmss');
+    var _date = moment().format('YYY-MM-DD HH:mm:ss');
+    console.log(_date + '\t' + data);
     if (data.indexOf('Total speed:') == 0) {
-        console.log(data);
+        G.totalSpeed = {
+            date: date,
+            info: data
+        }
     }
     if (data.indexOf('Temp: GPU') == 0) {
-        console.log(data);
+        G.tempgpu = {
+            date: date,
+            info: data
+        }
     }
     if (data.indexOf('GPU') == 0) {
-        console.log(data);
+        G.gpu = {
+            date: date,
+            info: data
+        }
     };
+    console.log(G)
 });
 
 
