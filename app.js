@@ -10,23 +10,28 @@ var ipUtil = require('./Utils/ipUtil');
 var http = require('http');
 var request = require('request');
 global.G = {};
+var _cmd=null;
 
 
 
-function start() {
+function startCmd() {
     const cmd = config.path + 'miner --server ' + config.minerserver + ' --user ' + config.wallet + '.' + config.name + ' --pass z --port ' + config.minerport + ' --log 2';
     console.log('cmd', cmd);
-    const bat = spawn('cmd.exe', ['/s', '/c', cmd]);
-//const bat = spawn('cmd.exe',['/c','start2.bat'])
-    bat.stdout.on('data', function (stdout) {
+    const _cmd = spawn('cmd.exe', ['/s', '/c', cmd]);
+    //const bat = spawn('cmd.exe',['/c','start2.bat'])
+    _cmd.stdout.on('data', function (stdout) {
         console.log('已经正常启动')
     });
-    bat.stderr.on('data', function (data) {
+    _cmd.stderr.on('data', function (data) {
         console.log('发生了异常:' + data);
     });
 }
 
-start();
+function stopCmd() {
+    _cmd.disconnect();
+}
+
+startCmd();
 var filename = "miner.log";
 
 if (!fs.existsSync(filename)) fs.writeFileSync(filename, "");
