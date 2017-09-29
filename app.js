@@ -45,7 +45,8 @@ tail.on('line', function (data) {
             date: date,
             info: data
         }
-    };
+    }
+    ;
     console.log(G)
 });
 
@@ -56,6 +57,17 @@ tail.on('error', function (data) {
 
 tail.watch();
 
-setTimeout(function () {
+setInterval(function () {
+    //给服务器反馈一次消息;
+    console.log('给服务器发送消息');
+}, 10000);
 
-}, 20000);
+setInterval(function () {
+    //从服务器拉取一次消息;
+    console.log('从服务器拉取消息');
+    const restart = spawn('cmd.exe', ['/c', 'pm2 restart 0']);
+    console.log('重启服务器');
+    restart.stdout.on('data', function (stdout) {
+
+    });
+}, 15000);
