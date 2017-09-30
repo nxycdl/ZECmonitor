@@ -2,7 +2,7 @@
  * Created by dl on 2017-09-29.
  */
 module.exports = {
-    name: 'A1',
+    name: 'A3',
     wallet: 't1ThZu6Kw9hftaTvrupVpcwgXU59ff1E3jt',
     minerport: 3333,
     minerserver: 'zcash.pool.ethfans.org',
