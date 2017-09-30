@@ -10,14 +10,15 @@ var ipUtil = require('./Utils/ipUtil');
 var http = require('http');
 var request = require('request');
 global.G = {};
-var _cmd=null;
-
+var _cmd = null;
+var _lastCmd = null;
+var _lastReboot = {};
 
 
 function startCmd() {
     const cmd = config.path + 'miner --server ' + config.minerserver + ' --user ' + config.wallet + '.' + config.name + ' --pass z --port ' + config.minerport + ' --log 2';
     console.log('cmd', cmd);
-    const _cmd = spawn('cmd.exe', ['/s', '/c', cmd]);
+    _cmd = spawn('cmd.exe', ['/s', '/c', cmd]);
     //const bat = spawn('cmd.exe',['/c','start2.bat'])
     _cmd.stdout.on('data', function (stdout) {
         console.log('已经正常启动')
@@ -78,27 +79,34 @@ tail.watch();
 
 setInterval(function () {
     //给服务器反馈一次消息;
-    console.log('给服务器发送消息');
+    // console.log('给服务器发送消息');
     var params = {
         ip: ipUtil.getIPAdress,
         name: config.name,
         info: G
     }
-    //sendMessageToServer(params);
+    sendMessageToServer(params);
 }, 10000);
 
 setInterval(function () {
     //从服务器拉取一次消息;
-    console.log('从服务器拉取消息');
+    // console.log('从服务器拉取消息');
 
-}, 15000);
+}, 30000);
+
+setInterval(function () {
+    if (_lastReboot.date)
+        console.log('上次重启时间:' + _lastReboot.date);
+}, 30000)
 
 function restartClient() {
-    const restart = spawn('cmd.exe', ['/c', 'pm2 restart 0']);
-    console.log('重启服务器');
-    restart.stdout.on('data', function (stdout) {
-
-    });
+    //上一次的进程;
+    _lastCmd = _cmd;
+    console.log('重启服务');
+    startCmd();
+    console.log('杀死之前的进程');
+    _lastCmd.kill();
+    _lastReboot.date = moment().format('YYYY-MM-DD HH:mm:ss');
 }
 
 function sendMessageToServer2(params) {
